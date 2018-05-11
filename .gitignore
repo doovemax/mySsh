@@ -1,0 +1,9 @@
+build
+.idea
+.gradle
+local.properties
+main
+server.json
+*.swp
+
+
