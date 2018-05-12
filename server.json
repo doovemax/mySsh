@@ -1,0 +1,10 @@
+[
+	{
+	"name":"test",
+	"ip": "127.0.0.1",
+	"user": "doovemax",
+	"port": 22,
+	"password": "doovemax",
+	"method": "password"
+	}
+]

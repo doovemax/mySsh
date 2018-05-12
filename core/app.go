@@ -15,21 +15,21 @@ type App struct {
 	servers    []Server
 }
 
-func (app *App) version() {
-	fmt.Println("Autossh", VERSION, "。")
-	fmt.Println("由 Lenbo 编写，项目地址：https://github.com/islenbo/autossh。")
-}
-
-func (app *App) help() {
-	fmt.Println("go写的一个ssh远程客户端。可一键登录远程服务器，主要用来弥补Mac/Linux Terminal ssh无法保存密码的不足。")
-	fmt.Println("基本用法：")
-	fmt.Println("  直接输入autossh不带任何参数，列出所有服务器，输入对应编号登录。")
-	fmt.Println("参数：")
-	fmt.Println("  -v, --version", "\t", "显示 autossh 的版本信息。")
-	fmt.Println("  -h, --help   ", "\t", "显示帮助信息。")
-	fmt.Println("操作：")
-	fmt.Println("  list         ", "\t", "显示所有server。")
-}
+//func (app *App) version() {
+//	fmt.Println("Autossh", VERSION, "。")
+//	fmt.Println("由 Lenbo 编写，项目地址：https://github.com/islenbo/autossh。")
+//}
+//
+//func (app *App) help() {
+//	fmt.Println("go写的一个ssh远程客户端。可一键登录远程服务器，主要用来弥补Mac/Linux Terminal ssh无法保存密码的不足。")
+//	fmt.Println("基本用法：")
+//	fmt.Println("  直接输入autossh不带任何参数，列出所有服务器，输入对应编号登录。")
+//	fmt.Println("参数：")
+//	fmt.Println("  -v, --version", "\t", "显示 autossh 的版本信息。")
+//	fmt.Println("  -h, --help   ", "\t", "显示帮助信息。")
+//	fmt.Println("操作：")
+//	fmt.Println("  list         ", "\t", "显示所有server。")
+//}
 func (app *App) inputsh() Server {
 	var input string
 	Printer.Info("Enter number: ")
