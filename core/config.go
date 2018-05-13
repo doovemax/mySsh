@@ -6,19 +6,40 @@ import (
 	"os"
 	"strings"
 
+	"path/filepath"
+
 	"github.com/pkg/errors"
 )
 
 var (
-	ostype   = os.Getenv("GOOS")
-	listFile []string
+	ostype         = os.Getenv("GOOS")
+	listFile       []string
+	configTemplete string = `[
+  {
+    "name": "vagrant",
+    "ip": "192.168.10.19",
+    "port": 22,
+    "user": "root",
+    "password": "root",
+    "method": "password"
+  },
+  {
+    "name": "ssh-pem",
+    "ip": "192.168.33.11",
+    "port": 22,
+    "user": "root",
+    "password": "your pem file password or empty",
+    "method": "pem",
+    "key": "your pem file path"
+  }
+]`
 )
 
 func ConfigPath(conf string) (servers []Server, err error) {
 	file, err := os.Stat(conf)
 	if err != nil {
 		Printer.Errorln(err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	//config path  is a dir
@@ -32,6 +53,11 @@ func ConfigPath(conf string) (servers []Server, err error) {
 
 func configDir(conf string) ([]Server, error) {
 	var servers []Server
+	err := filepath.Walk(conf, listFunc)
+	if err != nil {
+		Printer.Errorln(err)
+		return nil, err
+	}
 	if len(listFile) < 1 {
 		err := errors.New("No config file")
 		return nil, err
@@ -80,6 +106,20 @@ func listFunc(path string, f os.FileInfo, err error) error {
 	ok := strings.HasSuffix(strRet, ".json")
 	if ok {
 		listFile = append(listFile, strRet)
+	}
+	return nil
+}
+
+func CreatConfig(file string) error {
+	err := os.Mkdir(file, 0755)
+	if err != nil {
+		return err
+	}
+
+	configByte := []byte(configTemplete)
+	err = ioutil.WriteFile(file+"/server.json", configByte, 0655)
+	if err != nil {
+		return err
 	}
 	return nil
 }

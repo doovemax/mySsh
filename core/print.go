@@ -33,7 +33,7 @@ func (print Print) Errorln(a ...interface{}) {
 	fmt.Println("\033[0m")
 }
 
-func (print Print) Errot(a ...interface{}) {
+func (print Print) Error(a ...interface{}) {
 	fmt.Print("\033[31m")
 	fmt.Print(a...)
 	fmt.Print("\033[0m")

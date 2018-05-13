@@ -65,7 +65,28 @@ func (app *App) list() {
 
 func (app *App) Exec() {
 	var err error
-	app.servers, err = ConfigPath(app.ServerPath)
+	if len(os.Args) == 0 {
+		app.servers, err = ConfigPath(app.ServerPath)
+		if os.IsNotExist(err) {
+			var FLAG string
+			Printer.Info("Creating config path ?(Yes/Quit): ")
+			fmt.Scan(&FLAG)
+			switch FLAG {
+			case "Y", "yes", "y":
+				err = CreatConfig(app.ServerPath)
+				if err != nil {
+					Printer.Errorln(err)
+					os.Exit(2)
+
+				}
+			case "Q", "q", "quit":
+				os.Exit(0)
+			}
+
+		} else if err != nil {
+			Printer.Errorln(err)
+		}
+	}
 	if len(os.Args) > 1 {
 		option := os.Args[1]
 		switch option {
