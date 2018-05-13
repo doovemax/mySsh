@@ -3,17 +3,22 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
+
+	"os/user"
+
+	"flag"
 
 	"./core"
 )
 
 func main() {
-	path, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	who, err := user.Current()
 	if err != nil {
 		fmt.Println("error: ", err)
-		return
+		os.Exit(1)
 	}
-	app := core.App{ServerPath: path + "/server.json"}
+	prefix := who.HomeDir
+	flag.Parse()
+	app := core.App{ServerPath: prefix + "/.mySsh"}
 	app.Exec()
 }

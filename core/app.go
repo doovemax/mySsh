@@ -1,9 +1,8 @@
 package core
 
 import (
-	"encoding/json"
+	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strconv"
 )
@@ -65,29 +64,19 @@ func (app *App) list() {
 }
 
 func (app *App) Exec() {
-	b, err := ioutil.ReadFile(app.ServerPath)
-	if err != nil {
-		Printer.Errorln(err)
-		os.Exit(2)
-	}
-
-	err = json.Unmarshal(b, &app.servers)
-	if err != nil {
-		Printer.Errorln(err)
-		os.Exit(2)
-	}
-
+	var err error
+	app.servers, err = ConfigPath(app.ServerPath)
 	if len(os.Args) > 1 {
 		option := os.Args[1]
 		switch option {
 		case "list":
 			app.list()
 		case "--version":
-			app.version()
+			Printer.Infoln(VERSION)
 		case "-h", "--help":
 			fallthrough
 		default:
-			app.help()
+			flag.Usage()
 
 		}
 	} else {
