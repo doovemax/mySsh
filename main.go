@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+	//获取用户$HOME
 	who, err := user.Current()
 	if err != nil {
 		fmt.Println("error: ", err)

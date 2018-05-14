@@ -1,7 +1,6 @@
 package core
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strconv"
@@ -88,19 +87,11 @@ func (app *App) Exec() {
 		}
 	}
 	if len(os.Args) > 1 {
-		option := os.Args[1]
-		switch option {
-		case "list":
-			app.list()
-		case "--version":
-			Printer.Infoln(VERSION)
-		case "-h", "--help":
-			fallthrough
-		default:
-			flag.Usage()
-
+		err = Args(app)
+		if err != nil {
+			Printer.Errorln(err)
+			os.Exit(2)
 		}
-	} else {
-		app.start()
 	}
+	app.start()
 }
