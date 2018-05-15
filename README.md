@@ -11,3 +11,21 @@
 
 
 
+## 安装 openssl 库:
+### Mac:
+```
+git clone https://github.com/openssl/openssl.git && cd openssl
+./config
+make
+cp -a include/* /usr/include/openssl/
+```
+
+### Ubuntu:
+```
+sudo apt install libssl-dev
+```
+
+### Centos && Fedora
+```
+sudo yum install openssl-devel
+```
