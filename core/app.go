@@ -30,11 +30,16 @@ type App struct {
 //}
 func (app *App) inputsh() Server {
 	var input string
-	Printer.Info("Enter number: ")
+	Printer.Info("Enter number(Name): ")
 	fmt.Scanln(&input)
 	num, err := strconv.Atoi(input)
 	if err != nil {
-		Printer.Errorln("Input error,Please again")
+		//Printer.Errorln("Input error,Please again")
+		for _, s := range app.servers {
+			if s.Name == input {
+				return s
+			}
+		}
 		return app.inputsh()
 	}
 
@@ -64,8 +69,8 @@ func (app *App) list() {
 
 func (app *App) Exec() {
 	var err error
-G:
 	if len(os.Args) == 1 {
+	R:
 		app.servers, err = ConfigPath(app.ServerPath)
 		if os.IsNotExist(err) {
 			var FLAG string
@@ -74,12 +79,12 @@ G:
 			switch FLAG {
 			case "Y", "yes", "y":
 				err = CreatConfig(app.ServerPath)
+				goto R
 				if err != nil {
 					Printer.Errorln(err)
 					os.Exit(2)
-
 				}
-				break G
+
 			case "Q", "q", "quit":
 				os.Exit(0)
 			}
@@ -95,5 +100,9 @@ G:
 			os.Exit(2)
 		}
 	}
-	app.start()
+	if host != "" {
+		app.servers[0].Connection()
+	} else {
+		app.start()
+	}
 }

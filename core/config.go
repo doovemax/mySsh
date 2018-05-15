@@ -15,23 +15,24 @@ var (
 	ostype         = os.Getenv("GOOS")
 	listFile       []string
 	configTemplete string = `[
-  {
-    "name": "vagrant",
-    "ip": "192.168.10.19",
-    "port": 22,
-    "user": "root",
-    "password": "root",
-    "method": "password"
-  },
-  {
-    "name": "ssh-pem",
-    "ip": "192.168.33.11",
-    "port": 22,
-    "user": "root",
-    "password": "your pem file password or empty",
-    "method": "pem",
-    "key": "your pem file path"
-  }
+    {
+        "name": "vagrant",
+        "ip": "192.168.10.19",
+        "port": 22,
+        "user": "root",
+        "password": "root",
+        "method": "password",
+		"key": ""
+    },
+    {
+        "name": "ssh-pem",
+        "ip": "192.168.33.11",
+        "port": 22,
+        "user": "root",
+        "password": "your pem file password or empty",
+        "method": "pem",
+        "key": "your pem file path"
+    }
 ]`
 )
 
@@ -79,7 +80,8 @@ func configFile(conf string) ([]Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = json.Unmarshal(b, server)
+	//Printer.Errorln("test")
+	err = json.Unmarshal(b, &server)
 	if err != nil {
 		return nil, err
 	}

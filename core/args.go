@@ -56,8 +56,8 @@ func Args(app *App) error {
 
 		Printer.Info("Enter user: ")
 		_, err := fmt.Scanln(&user)
-		Printer.Info("Enter ")
-		password, err = getpass.GetPass()
+		//Printer.Info("Enter ")
+		password, err = getpass.GetPassWithOptions("\033[32mEnter Password: \033[0m", 1, getpass.DefaultMaxPass)
 		if err != nil {
 			//Printer.Errorln(err)
 			//os.Exit(2)
