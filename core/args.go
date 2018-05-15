@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"path/filepath"
+
 	"github.com/gcmurphy/getpass"
 )
 
@@ -39,6 +41,7 @@ func Args(app *App) error {
 		os.Exit(0)
 	}
 	if f != "" {
+		f, _ = filepath.Abs(f)
 		servers, err := ConfigPath(f)
 		if err != nil {
 			//Printer.Errorln(err)
