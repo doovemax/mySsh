@@ -8,7 +8,7 @@ import (
 
 	"path/filepath"
 
-	"github.com/pkg/errors"
+	"errors"
 )
 
 var (

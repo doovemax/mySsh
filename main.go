@@ -8,7 +8,7 @@ import (
 
 	"flag"
 
-	"./core"
+	"github.com/doovemax/mySsh/core"
 )
 
 func main() {

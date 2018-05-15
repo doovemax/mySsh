@@ -64,7 +64,8 @@ func (app *App) list() {
 
 func (app *App) Exec() {
 	var err error
-	if len(os.Args) == 0 {
+G:
+	if len(os.Args) == 1 {
 		app.servers, err = ConfigPath(app.ServerPath)
 		if os.IsNotExist(err) {
 			var FLAG string
@@ -78,6 +79,7 @@ func (app *App) Exec() {
 					os.Exit(2)
 
 				}
+				break G
 			case "Q", "q", "quit":
 				os.Exit(0)
 			}
