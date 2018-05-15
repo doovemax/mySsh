@@ -29,3 +29,30 @@ sudo apt install libssl-dev
 ```
 sudo yum install openssl-devel
 ```
+
+## Example:
+
+```
+Usage of ./mySsh:
+  -f string
+    	specify config file
+  -h	Usage
+  -help
+    	Usage
+  -host string
+    	specity remote host
+  -list
+    	list remote hosts
+  -port int
+    	specity remote port (default 22)
+  -version
+    	Print version
+
+./mySsh -h |-help
+./mySsh  -f server.json
+./mySsh  -host IP [-port 22](Default)
+./mySsh  -version
+
+
+
+```
