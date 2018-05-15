@@ -125,4 +125,5 @@ func (server *Server) Connection() {
 		Printer.Errorln("执行Wait出错： ", err)
 		return
 	}
+	os.Exit(0)
 }

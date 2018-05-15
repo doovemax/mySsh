@@ -4,8 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"os"
-
 	"path/filepath"
+	"strings"
+
+	"errors"
 
 	"github.com/gcmurphy/getpass"
 )
@@ -32,6 +34,36 @@ func init() {
 }
 
 func Args(app *App) error {
+	last := flag.Args()
+	if len(last) == 1 {
+		//re, _ := regexp.Compile(`(?P<user>[0-9A-Za-z]+)@(?P<host>[0-9.]+)`)
+		hostinfo := strings.Split(last[0], "@")
+
+		fmt.Println(hostinfo)
+		USER := hostinfo[0]
+		HOST := hostinfo[1]
+		password, err := getpass.GetPassWithOptions("\033[32mEnter Password: \033[0m", 0, getpass.DefaultMaxPass)
+		if err != nil {
+			//Printer.Errorln(err)
+			//os.Exit(2)
+			return err
+		}
+		server := Server{
+			Name:     "",
+			User:     USER,
+			Password: password,
+			Ip:       HOST,
+			Port:     port,
+			Method:   "password",
+			Key:      "",
+		}
+		app.servers = append(app.servers, server)
+		app.servers[0].Connection()
+
+	} else if len(last) >= 2 {
+		return errors.New("args error")
+	}
+
 	if h || help {
 		flag.Usage()
 		os.Exit(0)
