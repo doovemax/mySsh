@@ -52,5 +52,5 @@ Usage of ./mySsh:
 ./mySsh  -f server.json
 ./mySsh  -host IP [-port 22](Default)
 ./mySsh  -version
-./mySsh user@host
+./mySsh [-port 2222] user@host #port 参数必须在前面
 ```
