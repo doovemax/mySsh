@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 
+	"path/filepath"
+
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -21,14 +23,14 @@ type Server struct {
 	Key      string `json:"key"`
 }
 
-func parseAuthMethods(server *Server) ([]ssh.AuthMethod, error) {
+func parseAuthMethods(config string, server *Server) ([]ssh.AuthMethod, error) {
 	sshs := []ssh.AuthMethod{}
 
 	switch server.Method {
 	case "password":
 		sshs = append(sshs, ssh.Password(server.Password))
 	case "pem":
-		method, err := pemKey(server)
+		method, err := pemKey(config, server)
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +42,11 @@ func parseAuthMethods(server *Server) ([]ssh.AuthMethod, error) {
 
 }
 
-func pemKey(server *Server) (ssh.AuthMethod, error) {
+func pemKey(config string, server *Server) (ssh.AuthMethod, error) {
+	if !filepath.IsAbs(server.Key) {
+		server.Key = config + "/" + server.Key
+	}
+	//fmt.Println(server.Key)
 	pemBytes, err := ioutil.ReadFile(server.Key)
 	if err != nil {
 		return nil, err
@@ -59,8 +65,8 @@ func pemKey(server *Server) (ssh.AuthMethod, error) {
 	return ssh.PublicKeys(signer), nil
 }
 
-func (server *Server) Connection() {
-	auths, err := parseAuthMethods(server)
+func (server *Server) Connection(conf string) {
+	auths, err := parseAuthMethods(conf, server)
 	if err != nil {
 		Printer.Errorln("auth error: ", err)
 	}
