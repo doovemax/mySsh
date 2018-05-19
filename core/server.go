@@ -9,6 +9,8 @@ import (
 
 	"path/filepath"
 
+	"time"
+
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -126,6 +128,13 @@ func (server *Server) Connection(conf string) {
 		return
 	}
 
+	//定时发送空串,防止 ssh 自动断开
+	ticker := time.NewTicker(time.Second * 10)
+	go func(ticker *time.Ticker, session *ssh.Session) {
+		for _ = range ticker.C {
+			session.Run(" ")
+		}
+	}(ticker, session)
 	err = session.Wait()
 	if err != nil {
 		Printer.Errorln("执行Wait出错： ", err)
