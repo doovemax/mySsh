@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 
+	"time"
+
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -70,13 +72,28 @@ func (server *Server) Connection() {
 		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 			return nil
 		},
+		Timeout: time.Second * 60,
 	}
 	addr := server.Ip + ":" + strconv.Itoa(server.Port)
-	client, err := ssh.Dial("tcp", addr, config)
+	//client, err := ssh.Dial("tcp", addr, config)
+	//if err != nil {
+	//	Printer.Errorln("建立连接出错： ", err)
+	//	return
+	//}
+
+	tcpConn, err := net.DialTimeout("tcp", addr, config.Timeout)
 	if err != nil {
-		Printer.Errorln("建立连接出错： ", err)
-		return
+		Printer.Errorln(err)
 	}
+	err = tcpConn.(*net.TCPConn).SetKeepAlivePeriod(time.Second * 10)
+	if err != nil {
+		Printer.Errorln(err)
+	}
+
+	clientConn, chans, reqs, err := ssh.NewClientConn(tcpConn, addr, config)
+
+	client := ssh.NewClient(clientConn, chans, reqs)
+
 	defer client.Close()
 
 	session, err := client.NewSession()
