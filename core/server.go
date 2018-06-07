@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	"path/filepath"
 	"strconv"
-
 	"time"
 
 	"golang.org/x/crypto/ssh"
@@ -23,14 +23,14 @@ type Server struct {
 	Key      string `json:"key"`
 }
 
-func parseAuthMethods(server *Server) ([]ssh.AuthMethod, error) {
+func parseAuthMethods(config string, server *Server) ([]ssh.AuthMethod, error) {
 	sshs := []ssh.AuthMethod{}
 
 	switch server.Method {
 	case "password":
 		sshs = append(sshs, ssh.Password(server.Password))
 	case "pem":
-		method, err := pemKey(server)
+		method, err := pemKey(config, server)
 		if err != nil {
 			return nil, err
 		}
@@ -42,7 +42,11 @@ func parseAuthMethods(server *Server) ([]ssh.AuthMethod, error) {
 
 }
 
-func pemKey(server *Server) (ssh.AuthMethod, error) {
+func pemKey(config string, server *Server) (ssh.AuthMethod, error) {
+	if !filepath.IsAbs(server.Key) {
+		server.Key = config + "/" + server.Key
+	}
+	//fmt.Println(server.Key)
 	pemBytes, err := ioutil.ReadFile(server.Key)
 	if err != nil {
 		return nil, err
@@ -61,8 +65,8 @@ func pemKey(server *Server) (ssh.AuthMethod, error) {
 	return ssh.PublicKeys(signer), nil
 }
 
-func (server *Server) Connection() {
-	auths, err := parseAuthMethods(server)
+func (server *Server) Connection(conf string) {
+	auths, err := parseAuthMethods(conf, server)
 	if err != nil {
 		Printer.Errorln("auth error: ", err)
 	}
@@ -137,10 +141,17 @@ func (server *Server) Connection() {
 		return
 	}
 
+	//定时发送空串,防止 ssh 自动断开
+	ticker := time.NewTicker(time.Second * 10)
+	go func(ticker *time.Ticker, session *ssh.Session) {
+		for _ = range ticker.C {
+			session.Run(" ")
+		}
+	}(ticker, session)
 	err = session.Wait()
 	if err != nil {
 		Printer.Errorln("执行Wait出错： ", err)
 		return
 	}
-	os.Exit(0)
+	//os.Exit(0)
 }

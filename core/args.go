@@ -58,7 +58,7 @@ func Args(app *App) error {
 			Key:      "",
 		}
 		app.servers = append(app.servers, server)
-		app.servers[0].Connection()
+		app.servers[0].Connection(app.ServerPath)
 
 	} else if len(last) >= 2 {
 		return errors.New("args error")
@@ -80,6 +80,7 @@ func Args(app *App) error {
 			//os.Exit(2)
 			return err
 		}
+		app.ServerPath = f
 		app.servers = servers
 		return nil
 

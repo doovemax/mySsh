@@ -2,3 +2,5 @@
 main
 test
 mySsh
+vendor
+.DS_Store

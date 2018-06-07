@@ -59,7 +59,7 @@ func (app *App) start() {
 	Printer.Infoln("====================================")
 
 	server := app.inputsh()
-	server.Connection()
+	server.Connection(app.ServerPath)
 }
 func (app *App) list() {
 	for _, server := range app.servers {
@@ -101,7 +101,7 @@ func (app *App) Exec() {
 		}
 	}
 	if host != "" {
-		app.servers[0].Connection()
+		app.servers[0].Connection(app.ServerPath)
 	} else {
 		app.start()
 	}
