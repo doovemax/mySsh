@@ -93,6 +93,10 @@ func (server *Server) Connection(conf string) {
 	if err != nil {
 		Printer.Errorln(err)
 	}
+	err= tcpConn.(*net.TCPConn).SetKeepAlive(true)
+    if err != nil {
+        Printer.Errorln(err)
+    }
 
 	clientConn, chans, reqs, err := ssh.NewClientConn(tcpConn, addr, config)
 
