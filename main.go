@@ -22,4 +22,5 @@ func main() {
 	flag.Parse()
 	app := core.App{ServerPath: prefix + "/.mySsh"}
 	app.Exec()
+	
 }
